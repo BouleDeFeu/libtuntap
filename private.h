@@ -43,7 +43,6 @@
  * Uniformize macros
  * - ETHER_ADDR_LEN: Magic number from IEEE 802.3
  * - IF_NAMESIZE: Length of interface external name
- * - IF_DESCRSIZE: Length of interface description
  * - TUNSDEBUG: ioctl flag to enable the debug mode of a tun device
  * - TUNFD_INVALID_VALUE: Invalid value for tun_fd
  */
@@ -58,12 +57,6 @@
 #define ETHER_ADDR_LEN ETH_ALEN
 #elif defined Windows
 #define ETHER_ADDR_LEN 6
-#endif
-
-#if defined IFDESCRSIZE
-#define IF_DESCRSIZE IFDESCRSIZE /* OpenBSD */
-#else
-#define IF_DESCRSIZE 1024 /* FreeBSD /sys/net/if.c, ifdescr_maxlen */
 #endif
 
 #if defined TUNSETDEBUG
