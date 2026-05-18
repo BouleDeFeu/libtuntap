@@ -308,5 +308,5 @@ tuntap_sys_get_descr(struct device *dev)
 {
 	(void)dev;
 	tuntap_log(TUNTAP_LOG_NOTICE, "Your system does not support tuntap_get_descr()");
-	return NULL;
+	return "";
 }

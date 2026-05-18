@@ -251,7 +251,7 @@ tuntap_sys_get_descr(struct device *dev)
 	ifr.ifr_data = ifdesrc;
 	if (ioctl(dev->ctrl_sock, SIOCGIFDESCR, &ifr) == -1) {
 		tuntap_log(TUNTAP_LOG_ERR, "Can't get the interface description");
-		return NULL;
+		return "";
 	}
 	return ifdesrc;
 }
