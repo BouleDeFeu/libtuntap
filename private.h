@@ -50,8 +50,6 @@
 
 #if defined IFNAMSIZ && !defined IF_NAMESIZE
 #define IF_NAMESIZE IFNAMSIZ /* Historical BSD name */
-#elif !defined IF_NAMESIZE
-#define IF_NAMESIZE 16
 #endif
 
 #if defined ETH_ALEN /* Linux */
