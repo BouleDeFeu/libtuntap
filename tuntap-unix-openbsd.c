@@ -226,13 +226,14 @@ int
 tuntap_sys_set_descr(struct device *dev, const char *descr, size_t len)
 {
 	struct ifreq ifr;
-	(void)len;
 
+	if (len > IFDESCRSIZE) {
+		/* The value will be truncated */
+		tuntap_log(TUNTAP_LOG_WARN, "Parameter 'descr' is too long");
+	}
 	(void)memset(&ifr, '\0', sizeof ifr);
 	(void)strlcpy(ifr.ifr_name, dev->if_name, sizeof ifr.ifr_name);
-
 	ifr.ifr_data = (void *)descr;
-
 	if (ioctl(dev->ctrl_sock, SIOCSIFDESCR, &ifr) == -1) {
 		tuntap_log(TUNTAP_LOG_ERR, "Can't set the interface description");
 		return -1;
@@ -244,14 +245,14 @@ char *
 tuntap_sys_get_descr(struct device *dev)
 {
 	struct ifreq ifr;
-	static char ifdesrc[IF_DESCRSIZE];
+	static char ifdesrc[IFDESCRSIZE];
 
 	(void)memset(&ifr, 0, sizeof ifr);
 	(void)strlcpy(ifr.ifr_name, dev->if_name, sizeof ifr.ifr_name);
 	ifr.ifr_data = ifdesrc;
 	if (ioctl(dev->ctrl_sock, SIOCGIFDESCR, &ifr) == -1) {
 		tuntap_log(TUNTAP_LOG_ERR, "Can't get the interface description");
-		return NULL;
+		return "";
 	}
 	return ifdesrc;
 }

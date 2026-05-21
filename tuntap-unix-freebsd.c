@@ -44,6 +44,8 @@
 #include "private.h"
 #include "tuntap.h"
 
+#define IF_DESCRSIZE 1024 /* FreeBSD /sys/net/if.c, ifdescr_maxlen */
+
 static int
 tuntap_sys_create_dev(struct device *dev, const char *iftype, int unit)
 {
@@ -267,6 +269,10 @@ tuntap_sys_set_descr(struct device *dev, const char *descr, size_t len)
 	struct ifreq ifr;
 	struct ifreq_buffer ifrbuf;
 
+	if (len > IF_DESCRSIZE) {
+		/* The value will be truncated */
+		tuntap_log(TUNTAP_LOG_WARN, "Parameter 'descr' is too long");
+	}
 	(void)memset(&ifr, '\0', sizeof ifr);
 	(void)strlcpy(ifr.ifr_name, dev->if_name, sizeof ifr.ifr_name);
 	ifrbuf.buffer = (void *)descr;
@@ -277,8 +283,6 @@ tuntap_sys_set_descr(struct device *dev, const char *descr, size_t len)
 		return -1;
 	}
 	return 0;
-	tuntap_log(TUNTAP_LOG_NOTICE, "Your system does not support tuntap_set_descr()");
-	return -1;
 }
 
 char *
@@ -293,7 +297,7 @@ tuntap_sys_get_descr(struct device *dev)
 	ifr.ifr_buffer.length = sizeof ifdesrc;
 	if (ioctl(dev->ctrl_sock, SIOCGIFDESCR, &ifr) == -1) {
 		tuntap_log(TUNTAP_LOG_ERR, "Can't get the interface description");
-		return NULL;
+		return "";
 	}
 	return ifdesrc;
 }
