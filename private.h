@@ -17,8 +17,16 @@
 #include <sys/types.h>
 
 #if defined Windows
-#include <in6addr.h>
+/* Windows headers are import-order dependent, disable reorder */
+/* clang-format off */
 #include <stdint.h>
+#include <winsock2.h>
+#include <windows.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <in6addr.h>
+#include <inaddr.h>
+/* clang-format on */
 #else /* Unix */
 #include <sys/socket.h>
 #endif
@@ -50,8 +58,6 @@
 
 #if defined IFNAMSIZ && !defined IF_NAMESIZE
 #define IF_NAMESIZE IFNAMSIZ /* Historical BSD name */
-#elif !defined IF_NAMESIZE
-#define IF_NAMESIZE 16
 #endif
 
 #if defined ETH_ALEN /* Linux */
