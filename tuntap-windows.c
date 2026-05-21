@@ -21,10 +21,11 @@
 #include <string.h>
 #include <strsafe.h>
 #include <time.h>
-#include <windows.h>
 
 #include "private.h"
 #include "tuntap.h"
+
+#include <wbemidl.h>
 
 /* From OpenVPN tap driver, common.h */
 #define TAP_CONTROL_CODE(request, method) CTL_CODE(FILE_DEVICE_UNKNOWN, request, method, FILE_ANY_ACCESS)
